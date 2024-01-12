@@ -19,29 +19,28 @@ function init() {
         barChart(selection);
         bubbleChart(selection);
         metadataPanel(selection);
-        gaugeChart(selection);
+        //gaugeChart(selection);
     });
 };
 
 
 //BAR CHART
-function barchart(ID) {
-    d3.json(url).then(function(data){
-        let choice=data.sample.filter(function(row){
-            row.id===ID
-        })[0];
+function barChart(sample) {
+    d3.json(url).then((data)=>{
+        let selection = data.samples.filter(match=>match.id === sample)[0];
         let trace = {
-            x: choice.sample_values.slice(0,10),
-            y: choice.otu_ids.slice(0,10).map(function(number){
-                `OTU ${number}`
-            }),
-            text: choice.otu_labels.slice(0,10),
-            type:"bar",
-            orientation: "h"
+            x: selection.sample_values.slice(0,10),
+            y: selection.otu_ids.slice(0, 10).map(id => `OTU ${id}`),
+
+            text: selection.otu_labels.slice(0,10),
+            type: 'bar',
+            orientation: 'h'
         };
         Plotly.newPlot('bar', [trace]);
-    }
-}
+    })
+};
+
+
 //BUBBLE CHART
 function bubbleChart(sample) {
     d3.json(url).then((data)=>{
@@ -81,7 +80,7 @@ function metadataPanel(sample) {
 };
 
 //DROPDOWN MENU
-function optionChanged(sample) {
+function optionChanged(ID) {
     console.log(sample);
     barChart(sample);
     bubbleChart(sample);
@@ -89,4 +88,4 @@ function optionChanged(sample) {
     gaugeChart(sample);
 };
 
-init();    
+init();              
